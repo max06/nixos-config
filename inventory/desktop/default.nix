@@ -6,5 +6,6 @@
 
   config = {
     audiosystem = "pulseaudio";
+    foo.users = ["flo"];
   };
 }

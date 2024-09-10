@@ -9,6 +9,10 @@ with lib; {
     type = types.str;
   };
 
+  imports = [
+    ../user
+  ];
+
   config = {
     inherit hostname;
 
@@ -17,6 +21,6 @@ with lib; {
     networking.hostName = mkDefault hostname;
     networking.useDHCP = mkDefault true;
 
-    networking.hostName = hostname;
+    foo.users = ["foo"];
   };
 }
