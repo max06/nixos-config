@@ -3,15 +3,19 @@
   lib,
   hostname,
   ...
-}: {
-  options.hostname = lib.mkOption {
-    type = lib.types.str;
+}:
+with lib; {
+  options.hostname = mkOption {
+    type = types.str;
   };
 
   config = {
     inherit hostname;
 
-    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
+    nixpkgs.hostPlatform = mkDefault "x86_64-linux";
+
+    networking.hostName = mkDefault hostname;
+    networking.useDHCP = mkDefault true;
 
     networking.hostName = hostname;
   };

@@ -2,8 +2,15 @@
   config,
   pkgs,
   ...
-}: {
-  config = {
+}:
+with lib; {
+  options = {
+    audiosystem = mkOption {
+      type = with types; nullOr (enum ["pulseaudio"]);
+    };
+  };
+
+  config = mkIf (config.audiosystem == "pulseaudio") {
     hardware.pulseaudio = {
       enable = true;
       package = pkgs.pulseaudioFull;
