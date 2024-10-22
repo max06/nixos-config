@@ -291,12 +291,12 @@
       "kwinrc"."Desktops"."Rows" = 1;
       "kwinrc"."Tiling"."padding" = 4;
       "kwinrc"."Tiling/b4addc6a-73f4-50c9-91d2-f467f1a6f039"."tiles" = "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
-      "kwinrc"."Tiling/bf215e3b-b58c-5c4a-8c32-96981be0137c"."tiles" = "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"width\":0.25}]}";
+      "kwinrc"."Tiling/bf215e3b-b58c-5c4a-8c32-96981be0137c"."tiles" = "{\"layoutDirection\":\"horizontal\",\"tiles\":[{\"width\":0.25},{\"width\":0.5},{\"layoutDirection\":\"vertical\",\"tiles\":[{\"height\":0.5},{\"height\":0.5}],\"width\":0.25}]}";
       "kwinrc"."Xwayland"."Scale" = 1;
       "kxkbrc"."Layout"."DisplayNames" = ",";
-      "kxkbrc"."Layout"."LayoutList" = "de,us";
+      "kxkbrc"."Layout"."LayoutList" = "de,de,us";
       "kxkbrc"."Layout"."Use" = true;
-      "kxkbrc"."Layout"."VariantList" = ",";
+      "kxkbrc"."Layout"."VariantList" = "deadacute,,";
       "plasma-localerc"."Formats"."LANG" = "en_US.UTF-8";
       "plasmanotifyrc"."Applications/discord"."Seen" = true;
       "plasmanotifyrc"."Applications/slack"."Seen" = true;
