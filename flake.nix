@@ -10,7 +10,7 @@
     systems.url = "github:nix-systems/default-linux";
 
     # Older nixpkgs - currently unused
-    nixpkgs-previous.url = "github:NixOS/nixpkgs?rev=8987be1fef03440514ebf3b0b60e0c44fc13eb6c";
+    nixpkgs-previous.url = "github:NixOS/nixpkgs?rev=18337306f0c5d7a6b6975bfa334d0d3dfd1e4c30";
 
     # Secureboot
     lanzaboote = {
@@ -41,6 +41,7 @@
     ...
   }: let
     lib = nixpkgs.lib // home-manager.lib;
+    myLib = import ./lib {inherit inputs;};
     forEachSystem = f: lib.genAttrs (import systems) (system: f pkgsFor.${system});
     pkgsFor = lib.genAttrs (import systems) (
       system:
@@ -49,44 +50,17 @@
           config.allowUnfree = true;
         }
     );
+
+    groups = {
+      desktop = [
+        "monster"
+      ];
+    };
+
+    nixosConfigurations = myLib.mkNixos groups;
   in {
     formatter = forEachSystem (pkgs: pkgs.alejandra);
 
-    nixosConfigurations = let
-      inherit (nixpkgs) lib;
-      system = "x86_64-linux";
-      groups = {
-        desktop = [
-          "monster"
-        ];
-      };
-    in
-      builtins.foldl' (
-        acc: group:
-          acc
-          // lib.genAttrs groups.${group} (
-            hostname:
-              lib.nixosSystem {
-                specialArgs = {
-                  inherit inputs hostname;
-                  pkgs-previous = import nixpkgs-previous {
-                    inherit system;
-                    config.allowUnfree = true;
-                  };
-                };
-                modules = [
-                  {
-                    nix.settings.experimental-features = ["nix-command" "flakes"];
-                    nixpkgs.hostPlatform = system;
-                    nixpkgs.config.allowUnfree = true;
-                  }
-                  (import ./overlays)
-                  ./inventory
-                  ./inventory/${group}
-                  ./inventory/${group}/${hostname}
-                ];
-              }
-          )
-      ) {} (builtins.attrNames groups);
+    inherit nixosConfigurations;
   };
 }

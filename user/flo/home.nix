@@ -6,6 +6,10 @@
 }: {
   imports = [
     ../modules/browsers/vivaldi.nix
+    ../modules/cloud/synology-drive.nix
+    ../modules/notes/obsidian.nix
+    ../modules/security/bitwarden
+    ../modules/security/gnupg
     ../modules/shells/fish
     ./ssh
   ];

@@ -1,5 +1,6 @@
-{ pkgs, ... }: {
+{pkgs, ...}: {
   environment.systemPackages = with pkgs; [
-    alejandra
+    alejandra # formatter
+    home-manager # Lets us run commands like `home-manager switch`
   ];
 }

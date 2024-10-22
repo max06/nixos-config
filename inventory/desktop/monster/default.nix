@@ -39,6 +39,7 @@
 
       loader = {
         systemd-boot.enable = true;
+        systemd-boot.configurationLimit = 50;
         efi.canTouchEfiVariables = true;
       };
     };
@@ -98,6 +99,9 @@
     virtualisation.waydroid.enable = true;
     # TODO Automate it
     # nix-shell -p nur.repos.ataraxiasjel.waydroid-script
+
+    # TODO: Move to module
+    programs.steam.enable = true;
 
     # DO NOT TOUCH
     system.stateVersion = "23.11";
