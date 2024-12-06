@@ -7,10 +7,12 @@
     # Standard nixos ecosystem
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-    systems.url = "github:nix-systems/default-linux";
 
-    # Older nixpkgs - currently unused
-    nixpkgs-previous.url = "github:NixOS/nixpkgs?rev=18337306f0c5d7a6b6975bfa334d0d3dfd1e4c30";
+    # Partitioning
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Secureboot
     lanzaboote = {
@@ -38,6 +40,8 @@
     systems,
     home-manager,
     plasma-manager,
+    disko,
+    nixos-generators,
     ...
   }: let
     lib = nixpkgs.lib // home-manager.lib;
@@ -57,11 +61,28 @@
       ];
     };
 
+    generatedNixosConfigurations = myLib.mkNixos groups;
     generatedPackages =
       forEachSystem (pkgs:
         import ./packages/default.nix {inherit pkgs;});
   in {
     formatter = forEachSystem (pkgs: pkgs.alejandra);
+
+    nixosConfigurations =
+      generatedNixosConfigurations
+      // {
+        guest-proxmox = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            disko.nixosModules.disko
+            ./profiles/hardware/virtual
+            ./profiles/hardware/virtual/proxmox
+            # ./configuration.nix
+            # ./hardware-configuration.nix
+          ];
+        };
+      };
+
 
     packages =
       generatedPackages
