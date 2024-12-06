@@ -332,7 +332,7 @@
   # Packages that should be installed to the user profile.
   home.packages = with pkgs; [
     libreoffice-qt6-fresh
-
+    git-credential-manager
     slack
     discord
     zoom-us
@@ -347,6 +347,8 @@
     nixpkgs-fmt
     chromium
     vscode
+    vlc
+    htop
     # previous.element-desktop
     # here is some command line tools I use frequently
     # feel free to add your own or remove some of them
