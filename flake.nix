@@ -50,7 +50,6 @@
     plasma-manager,
     deploy-rs,
     disko,
-    nixos-generators,
     ...
   }: let
     lib = nixpkgs.lib // home-manager.lib;
