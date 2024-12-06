@@ -26,9 +26,5 @@
           '';
         };
     })
-
-    # (final: prev: {
-    #   vscode = pkgs-previous.vscode;
-    # })
   ];
 }

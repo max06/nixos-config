@@ -10,6 +10,11 @@
     nixpkgs-pinned.url = "github:NixOS/nixpkgs?rev=4c2fcb090b1f3e5b47eaa7bd33913b574a11e0a0";
     nixpkgs-fork-netboot.url = "github:max06/nixpkgs/add-netboot-password";
     systems.url = "github:nix-systems/default";
+    # For accessing `deploy-rs`'s utility Nix functions
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Partitioning
     disko = {
@@ -44,6 +49,7 @@
     systems,
     home-manager,
     plasma-manager,
+    deploy-rs,
     disko,
     nixos-generators,
     ...
@@ -109,6 +115,26 @@
           ];
         };
       };
+
+    deploy.nodes.monster = {
+      hostname = "monster";
+      profiles.system = {
+        user = "root";
+        path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.monster;
+      };
+    };
+
+    deploy.nodes.srv-k3s01 = {
+      hostname = "192.168.27.227";
+      sshUser = "root";
+      profiles.system = {
+        user = "root";
+        path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.guest-proxmox;
+      };
+    };
+
+    # This is highly advised, and will prevent many possible mistakes
+    checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
 
     packages =
       generatedPackages
