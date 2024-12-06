@@ -2,6 +2,8 @@
 with lib; {
   imports = [
     ./targets/gec.nix
+    ./targets/docker.nix
+    ./targets/router.nix
   ];
 
   config = {
