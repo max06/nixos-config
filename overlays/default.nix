@@ -2,13 +2,13 @@
 {
   inputs,
   pkgs,
-  pkgs-previous,
+  pkgs-pinned,
   ...
 }: {
   nixpkgs.overlays = [
-    (self: super: {
-      # element-desktop = pkgs-previous.element-desktop;
-    })
+    # (self: super: {
+    #   libreoffice-qt6-fresh = pkgs-pinned.libreoffice-qt6-fresh;
+    # })
 
     (final: prev: {
       vivaldi =

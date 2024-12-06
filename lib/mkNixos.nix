@@ -14,7 +14,7 @@
           value = lib.nixosSystem {
             specialArgs = {
               inherit inputs hostname; # 'hostname' needs to be inherited here
-              pkgs-previous = import inputs.nixpkgs-previous {
+              pkgs-pinned = import inputs.nixpkgs-pinned {
                 system = "x86_64-linux";
                 config.allowUnfree = true;
               };

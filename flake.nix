@@ -1,5 +1,5 @@
 {
-  description = "NixOS Config";
+  description = "Crazy NixOS Config";
 
   inputs = {
     # Systemspace
@@ -7,7 +7,9 @@
     # Standard nixos ecosystem
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-pinned.url = "github:NixOS/nixpkgs?rev=4c2fcb090b1f3e5b47eaa7bd33913b574a11e0a0";
     nixpkgs-fork-netboot.url = "github:max06/nixpkgs/add-netboot-password";
+    systems.url = "github:nix-systems/default";
 
     # Partitioning
     disko = {
@@ -37,6 +39,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
+    nixpkgs-pinned,
     nixpkgs-fork-netboot,
     systems,
     home-manager,
