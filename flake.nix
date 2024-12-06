@@ -7,6 +7,7 @@
     # Standard nixos ecosystem
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
+    nixpkgs-fork-netboot.url = "github:max06/nixpkgs/add-netboot-password";
 
     # Partitioning
     disko = {
@@ -36,7 +37,7 @@
   outputs = inputs @ {
     self,
     nixpkgs,
-    nixpkgs-previous,
+    nixpkgs-fork-netboot,
     systems,
     home-manager,
     plasma-manager,
@@ -81,14 +82,45 @@
             # ./hardware-configuration.nix
           ];
         };
-      };
+        netboot = nixpkgs-fork-netboot.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ({
+              config,
+              modulesPath,
+              ...
+            }: {
+              imports = [
+                (modulesPath + "/installer/netboot/netboot-minimal.nix")
+              ];
+              config = {
+                ## Some useful options for setting up a new system
+                # services.getty.autologinUser = lib.mkForce "root";
+                # users.users.root.openssh.authorizedKeys.keys = [ ... ];
+                # console.keyMap = "de";
+                # hardware.video.hidpi.enable = true;
 
+                system.stateVersion = config.system.nixos.release;
+              };
+            })
+          ];
+        };
+      };
 
     packages =
       generatedPackages
       // {
         x86_64-linux =
           {
+            netboot = nixpkgs-fork-netboot.legacyPackages.x86_64-linux.symlinkJoin {
+              name = "netboot";
+              paths = with self.nixosConfigurations.netboot.config.system.build; [
+                netbootRamdisk
+                kernel
+                netbootIpxeScript
+              ];
+              preferLocalBuild = true;
+            };
           }
           // generatedPackages.x86_64-linux;
       };
