@@ -114,14 +114,7 @@
         };
       };
 
-    deploy.nodes.monster = {
-      hostname = "monster";
-      profiles.system = {
-        user = "root";
-        path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.monster;
-      };
-    };
-
+    # Only remote targets. No need for ssh when deploying locally.
     deploy.nodes.srv-k3s01 = {
       hostname = "192.168.27.227";
       sshUser = "root";
