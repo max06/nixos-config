@@ -57,10 +57,19 @@
       ];
     };
 
-    nixosConfigurations = myLib.mkNixos groups;
+    generatedPackages =
+      forEachSystem (pkgs:
+        import ./packages/default.nix {inherit pkgs;});
   in {
     formatter = forEachSystem (pkgs: pkgs.alejandra);
 
-    inherit nixosConfigurations;
+    packages =
+      generatedPackages
+      // {
+        x86_64-linux =
+          {
+          }
+          // generatedPackages.x86_64-linux;
+      };
   };
 }
