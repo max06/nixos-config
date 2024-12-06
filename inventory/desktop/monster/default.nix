@@ -26,6 +26,13 @@
       };
     };
 
+    swapDevices = [
+      {
+        device = "/var/lib/swapfile";
+        size = 16 * 1024;
+      }
+    ];
+
     boot = {
       initrd = {
         availableKernelModules = ["sd_mod" "sr_mod"];
