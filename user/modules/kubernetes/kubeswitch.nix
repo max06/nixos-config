@@ -10,6 +10,9 @@
   programs.fish = {
     interactiveShellInit = ''
       switcher init fish | source
+      # The init script only registers completions for `switcher`; let the
+      # `kubeswitch` function (and the `s` alias wrapping it) reuse them.
+      complete -c kubeswitch -w switcher
     '';
     # `alias` wraps the target, so `s` inherits kubeswitch's completions.
     shellAliases.s = "kubeswitch";
