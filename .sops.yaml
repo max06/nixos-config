@@ -1,0 +1,22 @@
+# Recipients for secrets/*.yaml.
+#
+# Flo edits secrets with the gpg key (via gpg-agent). Each host decrypts at
+# activation with an age key derived from its SSH host key:
+#   ssh-keyscan <host> | ssh-to-age            # or, on the host:
+#   ssh-to-age < /etc/ssh/ssh_host_ed25519_key.pub
+# Paste the age1... public keys below, then `sops updatekeys secrets/*.yaml`.
+keys:
+  - &flo FAE80AAB28045B8BE8603DBD07E86793BA50B1F5
+  - &host_monster age1gsj0jxw3lhyvqyhtgmn9zedhkh7k25jk59kw43ta3t5wwwkjyadsxpcd4m
+  - &host_rancher age1vpdhv9f7xswsx7pygxwj7jhwe6lg0t8fehmd7zv756h36d6h3ussjj4edy
+  - &host_pw age1mpdt8n7kjdaurny7wp8pr67y0e4hv26pyexl502zmgqc689ryyaqdfs76e
+
+creation_rules:
+  - path_regex: secrets/users\.yaml$
+    key_groups:
+      - pgp:
+          - *flo
+        age:
+          - *host_monster
+          - *host_rancher
+          - *host_pw

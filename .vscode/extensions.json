@@ -1,0 +1,7 @@
+{
+  "recommendations": [
+    "jnoortheen.nix-ide",
+    "signageos.signageos-vscode-sops",
+    "mkhl.direnv"
+  ]
+}

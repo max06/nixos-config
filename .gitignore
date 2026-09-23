@@ -1,0 +1,13 @@
+# nix build outputs
+result
+result-*
+
+# direnv cache
+.direnv/
+
+# editor leftovers
+*.swp
+*~
+
+# proxmox-nixos local credentials
+nixmoxer.conf
