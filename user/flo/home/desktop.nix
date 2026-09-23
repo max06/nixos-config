@@ -21,8 +21,6 @@
     ];
   };
 
-  programs.k9s.enable = true;
-
   # ---------------------------------------------------------------- services
   services.keybase.enable = true;
   services.kbfs.enable = true;

@@ -11,7 +11,7 @@
   imports = [
     ../../modules/shells/fish
     ../../modules/shells/starship.nix
-    ../../modules/kubernetes/kubeswitch.nix
+    ../../modules/kubernetes
     ./git.nix
     ../ssh
   ];
@@ -42,6 +42,11 @@
       # everyday cli
       jq
       btop
+      xdg-utils # xdg-open; in containers VS Code routes it to the host browser
+
+      # secrets
+      sops
+      age
     ];
 
     # home-manager release this configuration was created with. Do not change.
