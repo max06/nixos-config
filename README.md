@@ -96,6 +96,10 @@ the usual container usernames (`vscode`, `node`, `root`, `codespace`,
 `ubuntu`, `coder`) and otherwise falls back to `homeConfigurations.container`,
 which reads user and home from the environment with `--impure`.
 
+Activation also seeds `~/.kube/switch-config.yaml` for kubeswitch if it does
+not exist yet. The file is meant to be extended by hand (Rancher stores need
+an inline token) and is never overwritten.
+
 ## Installing a new VM
 
 Create the VM in Proxmox (UEFI, TPM, boot from the NixOS installer ISO or
