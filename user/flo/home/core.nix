@@ -5,6 +5,8 @@
 {
   imports = [
     ../../modules/shells/fish
+    ../../modules/shells/starship.nix
+    ../../modules/kubernetes/kubeswitch.nix
     ./git.nix
     ../ssh
   ];
