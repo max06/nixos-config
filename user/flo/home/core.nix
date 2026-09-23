@@ -1,7 +1,12 @@
 # Portable part of flo's home: shell and CLI tools. Used on the desktop and
 # inside devcontainers (see flake.nix `homeConfigurations`). Must not depend
 # on systemd, a display, or host secrets.
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 {
   imports = [
     ../../modules/shells/fish
@@ -20,6 +25,12 @@
   };
 
   config = {
+    # Standalone home-manager (devcontainers) installs packages into the
+    # user's nix profile, which the container's default PATH does not
+    # include. Add it here; on NixOS this resolves to the per-user profile
+    # that is already on PATH, so it is harmless there.
+    home.sessionPath = [ "${config.home.profileDirectory}/bin" ];
+
     home.packages = with pkgs; [
       # network diagnostics
       dnsutils # dig, nslookup
