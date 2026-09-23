@@ -165,7 +165,17 @@
   };
 
   # --------------------------------------------------------- virtualisation
-  virtualisation.docker.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    # Docker >= 27 manages ip6tables by default and, being the one that has
+    # to enable IPv6 forwarding, sets the ip6 FORWARD policy to drop. It also
+    # loads br_netfilter, which sends frames bridged between enp45s0 and the
+    # libvirt taps on br0 through that same chain, so VMs lose every IPv6
+    # packet beyond the host (no RAs, no neighbour discovery). IPv4 is spared
+    # only because libvirt enables IPv4 forwarding first. Docker networks
+    # here carry no IPv6, so dropping its ip6tables management costs nothing.
+    daemon.settings.ip6tables = false;
+  };
   virtualisation.libvirtd = {
     enable = true;
     qemu = {
