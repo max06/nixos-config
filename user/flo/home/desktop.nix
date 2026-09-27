@@ -47,6 +47,9 @@
     maliit-keyboard
     virt-viewer
     cage
+    # Chat, Cowork and the Claude Code tab. FHS-wrapped, so the Claude Code
+    # binaries it downloads at runtime run on NixOS.
+    llm-agents.claude-desktop
 
     # lab / ML
     gns3-gui

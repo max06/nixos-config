@@ -28,7 +28,8 @@ user/default.nix        home-manager wiring + `hostUsers` option
 user/flo/               account (default.nix), keys.nix, ssh/, home/{core,git,desktop,container}.nix
 install.sh              devcontainer dotfiles hook -> homeConfigurations.<user>
 user/modules/<topic>/   reusable home-manager modules
-overlays/default.nix    nixpkgs overlays (vivaldi from nixpkgs-master)
+overlays/default.nix    nixpkgs overlays (vivaldi from nixpkgs-master, numtide llm-agents
+                        as pkgs.llm-agents.* incl. claude-desktop fixes pending upstream)
 secrets/                sops files (not present until Flo creates them)
 .sops.yaml              recipients: Flo's gpg key + age key per host
 ```

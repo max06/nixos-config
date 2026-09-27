@@ -50,6 +50,16 @@
 
     # Declarative Proxmox VMs (virtualisation.proxmox.*)
     proxmox-nixos.url = "github:SaumonNet/proxmox-nixos";
+
+    # AI agent packaging, updated daily. Used for claude-desktop, which is
+    # not in nixpkgs: numtide repackages Anthropic's official .deb. Consumed
+    # through the shared-nixpkgs overlay (overlays/default.nix), so it builds
+    # against our nixpkgs and its own nixpkgs pin can follow ours.
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.systems.follows = "systems";
+    };
   };
 
   outputs =
