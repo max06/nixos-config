@@ -12,7 +12,12 @@ in
 {
   imports = [ ./kubeswitch.nix ];
 
-  programs.k9s.enable = true;
+  programs.k9s = {
+    enable = true;
+    # Hide the top header (cluster info, key hints, logo) by default, same as
+    # `k9s --headless`. The `?` help view still lists the key bindings.
+    settings.k9s.ui.headless = true;
+  };
 
   home.packages = with pkgs; [
     krew
