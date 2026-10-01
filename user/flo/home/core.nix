@@ -42,6 +42,7 @@
       # everyday cli
       jq
       btop
+      htop
       xdg-utils # xdg-open; in containers VS Code routes it to the host browser
 
       # secrets

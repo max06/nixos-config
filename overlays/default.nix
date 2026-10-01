@@ -7,38 +7,39 @@
     inputs.llm-agents.overlays.shared-nixpkgs
 
     (final: prev: {
-      llm-agents = prev.llm-agents // {
-        # Two fixes so Quick Entry (Ctrl+Alt+Space) can register through the
-        # Wayland GlobalShortcuts portal:
-        #  - The app probes for the portal with a hardcoded `/usr/bin/busctl`.
-        #    The upstream FHS env has no busctl, so the probe fails and the
-        #    shortcut is reported as unsupported. systemd provides it.
-        #  - The app identifies itself to the portal as `com.anthropic.Claude`
-        #    (its Electron desktopName), and xdg-desktop-portal rejects app IDs
-        #    without a matching .desktop file. Upstream names the entry
-        #    claude-desktop.desktop, so install it under the app ID instead,
-        #    with the matching window class, as Anthropic's own .deb does.
-        claude-desktop = prev.llm-agents.claude-desktop.override {
-          buildFHSEnv =
-            args:
-            let
-              inherit (args.passthru) unwrapped;
-            in
-            final.buildFHSEnv (
-              args
-              // {
-                targetPkgs = pkgs: args.targetPkgs pkgs ++ [ pkgs.systemd ];
-                extraInstallCommands = ''
-                  mkdir -p $out/share/applications
-                  ln -s ${unwrapped}/share/icons $out/share/icons
-                  ln -s ${unwrapped}/share/doc $out/share/doc
-                  sed 's/^StartupWMClass=.*/StartupWMClass=com.anthropic.Claude/' \
-                    ${unwrapped}/share/applications/claude-desktop.desktop \
-                    > $out/share/applications/com.anthropic.Claude.desktop
-                '';
-              }
-            );
-        };
+      # LM Studio's ROCm engine runs inside the AppImage FHS env and loads the
+      # ROCm runtime from its own vendor pack
+      # (~/.lmstudio/extensions/backends/vendor/linux-llama-rocm-vendor-*).
+      # Those libraries expect libelf and libzstd from the system, which the
+      # upstream FHS env lacks, so the hardware survey fails and the GPU is
+      # never offered.
+      # nix-ld does not help here: the FHS env brings its own dynamic loader.
+      # The package only exposes `callPackage`, so inject a patched
+      # appimageTools through it.
+      lmstudio = prev.lmstudio.override {
+        callPackage =
+          path: args:
+          final.callPackage path (
+            args
+            // {
+              appimageTools = final.appimageTools // {
+                wrapType2 =
+                  wrapArgs:
+                  final.appimageTools.wrapType2 (
+                    wrapArgs
+                    // {
+                      extraPkgs =
+                        pkgs:
+                        wrapArgs.extraPkgs pkgs
+                        ++ [
+                          pkgs.elfutils
+                          pkgs.zstd
+                        ];
+                    }
+                  );
+              };
+            }
+          );
       };
     })
 
