@@ -56,7 +56,7 @@
     # through the shared-nixpkgs overlay (overlays/default.nix), so it builds
     # against our nixpkgs and its own nixpkgs pin can follow ours.
     llm-agents = {
-      url = "github:numtide/llm-agents.nix";
+      url = "github:numtide/llm-agents.nix/c47d70b61b212f42b7b18956f687c733511cdbcb";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.systems.follows = "systems";
     };

@@ -44,6 +44,31 @@
     })
 
     (final: prev: {
+      # Claude Desktop >= 2.19675 links libpipewire directly from its native
+      # binding, but upstream still lists pipewire only as a runtime (dlopen)
+      # dependency, so auto-formatelf fails the build. Fixed here until
+      # numtide/llm-agents.nix#10391 (or its successor) adds it to
+      # buildInputs; drop this entry then.
+      # The package only exposes `override`, so inject a stdenvNoCC that adds
+      # pipewire to the unwrapped derivation (the darwin one has no
+      # buildInputs and is left alone).
+      llm-agents = prev.llm-agents // {
+        claude-desktop = prev.llm-agents.claude-desktop.override {
+          stdenvNoCC = prev.stdenvNoCC // {
+            mkDerivation =
+              args:
+              prev.stdenvNoCC.mkDerivation (
+                args
+                // final.lib.optionalAttrs (args ? buildInputs) {
+                  buildInputs = args.buildInputs ++ [ final.pipewire ];
+                }
+              );
+          };
+        };
+      };
+    })
+
+    (final: prev: {
       # Flo maintains vivaldi in nixpkgs; take it from master so new releases
       # are available before they propagate to unstable. Force Wayland.
       vivaldi = pkgs-master.vivaldi.override {
