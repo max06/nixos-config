@@ -70,7 +70,6 @@
           "tpm2-measure-pcr=yes" # extend PCR 15 with volume key -> detectable
         ];
       };
-      systemd.enable = true;
     };
 
     kernelPackages = pkgs.linuxPackages_latest;

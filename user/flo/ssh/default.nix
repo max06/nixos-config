@@ -43,6 +43,19 @@
           User = "flo";
           IdentityFile = "~/.ssh/id_universe";
           DynamicForward = 8123;
+          # Notice a dead connection (e.g. after the router restart) within
+          # ~90s, so VS Code reconnects instead of hanging on it.
+          # TODO(pw on NixOS): the server half lives in /etc/ssh/sshd_config.d
+          # on the Ubuntu VM today. When pw moves to NixOS, set in
+          # inventory/server/pw.nix:
+          #   services.openssh.settings = {
+          #     StreamLocalBindUnlink = true; # replace the stale gpg socket
+          #     ClientAliveInterval = 30;     # reap dead sessions holding it
+          #     ClientAliveCountMax = 3;
+          #   };
+          # and keep gpg-agent from claiming the socket for flo on pw.
+          ServerAliveInterval = 30;
+          ServerAliveCountMax = 3;
           # Forward the local gpg agent so signing and decryption work remotely.
           RemoteForward = [
             "/run/user/1000/gnupg/S.gpg-agent /run/user/1000/gnupg/S.gpg-agent.extra"
