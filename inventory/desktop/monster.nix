@@ -194,6 +194,41 @@
     dynamips.enable = true;
   };
 
+  # --------------------------------------------------------- speech-to-text
+  # whisper.cpp server on the GPU (Vulkan/RADV) for LAN clients, endpoint
+  # POST /inference. It has no authentication, so the port is open on br0 only.
+  systemd.services.whisper-server =
+    let
+      model = pkgs.fetchurl {
+        url = "https://huggingface.co/ggerganov/whisper.cpp/resolve/main/ggml-large-v3-turbo.bin";
+        sha256 = "1fc70f774d38eb169993ac391eea357ef47c88757ef72ee5943879b7e8e2bc69";
+      };
+    in
+    {
+      description = "whisper.cpp speech-to-text server";
+      wantedBy = [ "multi-user.target" ];
+      wants = [ "network-online.target" ];
+      after = [ "network-online.target" ];
+      # Mesa needs a writable shader cache; a DynamicUser has no home.
+      environment.MESA_SHADER_CACHE_DIR = "/var/cache/whisper-server";
+      serviceConfig = {
+        ExecStart = "${pkgs.whisper-cpp-vulkan}/bin/whisper-server -m ${model} --host 0.0.0.0 --port 8099 -l auto -fa";
+        DynamicUser = true;
+        SupplementaryGroups = [
+          "render"
+          "video"
+        ];
+        CacheDirectory = "whisper-server";
+        Restart = "on-failure";
+        RestartSec = 5;
+        ProtectSystem = "strict";
+        ProtectHome = true;
+        PrivateTmp = true;
+        NoNewPrivileges = true;
+      };
+    };
+  networking.firewall.interfaces."br0".allowedTCPPorts = [ 8099 ];
+
   users.users.flo.extraGroups = [
     "libvirtd"
     "docker"
